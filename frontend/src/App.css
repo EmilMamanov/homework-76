@@ -5,6 +5,17 @@
   text-align: center;
 }
 
+li {
+  text-decoration: none;
+  list-style: none;
+  text-align: left;
+  color: #1a1a1a;
+}
+
+label {
+  margin: 10px 0;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -39,4 +50,74 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.app-title {
+  margin-top: 0;
+  font-size: 37px;
+}
+
+
+
+.message-block {
+  height: 600px;
+  overflow: auto;
+  width: 900px;
+  border: 5px solid #765432;
+  border-radius: 10px;
+  background-color: #ffeedb;
+}
+
+.chat-title {
+  position: sticky;
+  top: 0;
+  min-height: 2em;
+  margin: 0;
+  background: #765432;
+  color: white;
+  text-align: center;
+  border-radius: 0 0 10px 10px;
+}
+
+form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.input-block {
+  text-align: left;
+  width: 100%;
+}
+
+
+
+.author-input {
+  margin: 10px 0;
+}
+
+input {
+  width: 91%;
+  border-radius: 10px;
+  padding: 12px 6px 8px;
+  background-color: #ffeedb;
+  color: #1a1a1a;
+}
+
+.send-btn {
+  text-align: center;
+  width: 20px;
+  height: 40px;
+  padding: 7px 32px 7px 11px;
+  background: #765432;
+}
+
+.send-btn-icon {
+  height: 100%;
+}
+
+.input-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 20px;
 }

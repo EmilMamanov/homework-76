@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import MessageList from './components/MessageList/MessageList';
+import MessageInput from './components/MessageInput/MessageInput';
+import { Message } from './types';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+const API_URL = 'http://localhost:8000/messages';
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+const App: React.FC = () => {
+    const [messages, setMessages] = useState<Message[]>([]);
 
-export default App
+    useEffect(() => {
+        const intervalId = setInterval(fetchMessages, 5000);
+
+        return () => clearInterval(intervalId);
+    }, []);
+
+    const fetchMessages = async () => {
+        try {
+            const response = await axios.get(API_URL);
+            setMessages(response.data);
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
+    };
+
+    const sendMessage = async (message: string, author: string) => {
+        try {
+            console.log('Sending message:', { message, author });
+            const requestData = {
+                message,
+                author,
+            };
+
+            await axios.post(API_URL, requestData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            await fetchMessages();
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
+    };
+
+    return (
+        <div>
+            <h1 className="app-title">Attractor chat</h1>
+            <div className="chat-block">
+                <MessageList messages={messages} />
+                <MessageInput onSendMessage={sendMessage} />
+            </div>
+        </div>
+    );
+};
+
+export default App;
