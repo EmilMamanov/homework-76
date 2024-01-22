@@ -30,7 +30,6 @@ const App: React.FC = () => {
 
     const sendMessage = async (message: string, author: string) => {
         try {
-            console.log('Sending message:', { message, author });
             const requestData = {
                 message,
                 author,
