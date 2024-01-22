@@ -35,12 +35,24 @@ const fileDb = {
         await fs.writeFile(messagesFilePath, JSON.stringify(messages), 'utf-8');
     },
 
-
     async getMessages(): Promise<Message[]> {
         const messagesContent = await fs.readFile(messagesFilePath, 'utf-8');
         const messages = JSON.parse(messagesContent) as Message[];
 
         return messages.slice(0, 30);
+    },
+
+    async getMessagesAfterDate(queryDate: string): Promise<Message[]> {
+        const date = new Date(queryDate);
+
+        if (isNaN(date.getDate())) {
+            throw new Error('Invalid datetime format');
+        }
+
+        const messagesContent = await fs.readFile(messagesFilePath, 'utf-8');
+        const messages = JSON.parse(messagesContent) as Message[];
+
+        return messages.filter(message => new Date(message.datetime) > date).slice(0, 30);
     },
 };
 
