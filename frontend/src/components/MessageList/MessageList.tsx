@@ -1,6 +1,8 @@
 import React from 'react';
 import { Message } from '../../types';
 import '../../App.css';
+import { List, ListItem, Typography } from '@mui/material';
+import dayjs from 'dayjs';
 
 interface MessageListProps {
     messages: Message[];
@@ -9,16 +11,39 @@ interface MessageListProps {
 const MessageList: React.FC<MessageListProps> = ({ messages }) => {
     return (
         <div className="message-block">
-            <h2 className="chat-title">Chat Messages</h2>
-            <ul>
+            <Typography variant="h6" gutterBottom>
+                Chat Messages
+            </Typography>
+            <List>
                 {messages.map((message) => (
-                    <li key={message._id}>
-                        <strong>{message.author}:</strong> {message.message} ({message.datetime})
-                    </li>
+                    <ListItem key={message._id}>
+                        <Typography>
+                            <strong>{message.author}:</strong> {message.message} ({formatMessageDate(message.datetime)})
+                        </Typography>
+                    </ListItem>
                 ))}
-            </ul>
+            </List>
         </div>
     );
+};
+
+const formatMessageDate = (datetime: string): string => {
+    const messageDate = dayjs(datetime);
+    const today = dayjs();
+
+    if (messageDate.isSame(today.subtract(1, 'day'), 'day')) {
+        return 'Вчера';
+    }
+
+    if (!messageDate.isSame(today, 'day')) {
+        if (messageDate.year() !== today.year()) {
+            return messageDate.format('DD.MM.YYYY HH:mm');
+        }
+
+        return messageDate.format('DD.MM HH:mm');
+    }
+
+    return messageDate.format('HH:mm');
 };
 
 export default MessageList;

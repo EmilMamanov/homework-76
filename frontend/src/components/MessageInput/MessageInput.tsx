@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import SendIcon from '../../assets/pngwing.com.png';
-import AuthorIcon from '../../assets/author-icon.png';
-import MessageIcon from '../../assets/message-icon.png';
+import { Button, TextField, Typography } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 interface MessageInputProps {
     onSendMessage: (message: string, author: string) => void;
@@ -10,33 +11,80 @@ interface MessageInputProps {
 const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
     const [message, setMessage] = useState('');
     const [author, setAuthor] = useState('');
+    const [messageError, setMessageError] = useState<string>('');
+    const [authorError, setAuthorError] = useState<string>('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (message.trim() && author.trim()) {
-            onSendMessage(message, author);
-            setMessage('');
+
+        // Валидация
+        if (!message.trim()) {
+            setMessageError('Message cannot be empty');
+            return;
+        } else {
+            setMessageError('');
         }
+
+        if (!author.trim()) {
+            setAuthorError('Author cannot be empty');
+            return;
+        } else {
+            setAuthorError('');
+        }
+
+        // Отправка сообщения
+        onSendMessage(message, author);
+        setMessage('');
+        setAuthor('');
     };
 
     return (
         <div>
-            <h2>Send a Message</h2>
+            <Typography variant="h6" gutterBottom>
+                Send a Message
+            </Typography>
             <form onSubmit={handleSubmit}>
-                <div className="input-block">
-                    <label>
-                        <img src={MessageIcon} alt="Author Icon" className="input-icon" />
-                        <input className="message-input" type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
-                    </label>
-                    <br />
-                    <label>
-                        <img src={AuthorIcon} alt="Author Icon" className="input-icon" />
-                        <input className="author-input" type="text" value={author} onChange={(e) => setAuthor(e.target.value)} />
-                    </label>
+                <div>
+                    <TextField
+                        label="Message"
+                        variant="outlined"
+                        fullWidth
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        error={Boolean(messageError)}
+                        helperText={messageError}
+                        InputProps={{
+                            startAdornment: (
+                                <AccountCircleIcon fontSize="small" sx={{ mr: 1 }} />
+                            ),
+                        }}
+                    />
                 </div>
-                <button className="send-btn" type="submit">
-                    <img className="send-btn-icon" src={SendIcon} alt="Paper Plane Icon" />
-                </button>
+                <div>
+                    <TextField
+                        label="Author"
+                        variant="outlined"
+                        fullWidth
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                        error={Boolean(authorError)}
+                        helperText={authorError}
+                        InputProps={{
+                            startAdornment: (
+                                <MailOutlineIcon fontSize="small" sx={{ mr: 1 }} />
+                            ),
+                        }}
+                    />
+                </div>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    endIcon={<SendIcon />}
+                    sx={{ mt: 2 }}
+                >
+                    Send
+                </Button>
             </form>
         </div>
     );
