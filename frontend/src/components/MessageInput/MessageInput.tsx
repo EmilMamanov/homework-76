@@ -6,9 +6,10 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 interface MessageInputProps {
     onSendMessage: (message: string, author: string) => void;
+    setFilterDate: (date: string | null) => void;
 }
 
-const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
+const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, setFilterDate }) => {
     const [message, setMessage] = useState('');
     const [author, setAuthor] = useState('');
     const [messageError, setMessageError] = useState<string>('');
@@ -17,7 +18,6 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Валидация
         if (!message.trim()) {
             setMessageError('Message cannot be empty');
             return;
@@ -32,11 +32,12 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
             setAuthorError('');
         }
 
-        // Отправка сообщения
         onSendMessage(message, author);
         setMessage('');
         setAuthor('');
+        setFilterDate(null);
     };
+
 
     return (
         <div>
