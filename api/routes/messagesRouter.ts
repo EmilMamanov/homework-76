@@ -1,14 +1,17 @@
 import express, { Router } from 'express';
 import { Message } from '../types';
 import fileDb from '../fileDb';
+import crypto from 'crypto';
 
 const router: Router = express.Router();
 
 router.post('/', async (req, res) => {
     try {
-        const { message } = req.body;
+        const { message, author } = req.body;
         const datetime = new Date().toISOString();
-        const newMessage: Message = { message, datetime };
+        const id = crypto.randomUUID();
+
+        const newMessage: Message = { id, message, author, datetime };
 
         await fileDb.saveMessage(newMessage);
         res.json(newMessage);
